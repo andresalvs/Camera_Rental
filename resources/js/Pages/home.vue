@@ -3,7 +3,6 @@
         class="min-h-screen bg-gradient-to-r from-teal-950 via-teal-900 to-teal-950 text-white"
     >
         <!-- Header with Navbar -->
-         
         <header
             class="bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg fixed w-full z-10"
         >
@@ -24,6 +23,23 @@
 
                     <!-- Desktop Navigation -->
                     <nav class="hidden md:flex space-x-6 items-center">
+                        <Link
+                            v-if="
+                                ($page.props.auth?.user?.email ===
+                                    'salte@salte.com',
+                                'andresalvadorgregorio@gmail.com')
+                            "
+                            :href="route('CameraDashboard')"
+                            class="relative overflow-hidden group px-4 py-2 rounded-full transition-all duration-300"
+                        >
+                            <span
+                                class="relative z-10 transition-colors duration-300 group-hover:text-gray-900"
+                                >Dashboard</span
+                            >
+                            <span
+                                class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-green-600 opacity-0 group-hover:opacity-100 transform scale-x-0 group-hover:scale-x-100 transition-all duration-300 rounded-full"
+                            ></span>
+                        </Link>
                         <Link
                             :href="route('home')"
                             class="relative overflow-hidden group px-4 py-2 rounded-full transition-all duration-300"
@@ -438,69 +454,73 @@
             <!-- Camera Listing Section -->
             <div id="camera">
                 <!-- Our Camera Collection Section -->
-                <div
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-                >
-                    <div
-                        v-for="camera in cameras.data"
-                        :key="camera.camera_id"
-                        class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
-                    >
-                        <img
-                            v-if="camera.camera_image"
-                            :src="`/storage/app/public/upload/${camera.camera_image}`"
-                            :alt="camera.camera_name"
-                            class="w-full h-64 object-cover"
-                        />
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold mb-2 text-white">
-                                {{ camera.camera_name }}
-                            </h3>
-                            <p class="text-gray-400 mb-4">
-                                {{ camera.camera_category }}
-                            </p>
-                            <span class="text-2xl font-bold text-green-400"
-                                >${{ camera.camera_price }}</span
+                <section class="py-10">
+                    <h2 class="text-center text-3xl font-bold mb-6">
+                        Our Camera Collection
+                    </h2>
+
+                    <div class="camera-carousel-container">
+                        <div
+                            class="camera-carousel grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                        >
+                            <div
+                                v-for="camera in paginatedCameras"
+                                :key="camera.id"
+                                class="bg-gray-950 camera-item rounded-lg p-4 shadow-md"
                             >
+                                <img
+                                    :src="camera.image"
+                                    :alt="camera.name"
+                                    class="camera-image mb-4"
+                                />
+                                <h3 class="text-lg font-bold">
+                                    {{ camera.name }}
+                                </h3>
+                                <p class="text-gray-600">
+                                    {{ camera.description }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        <div
+                            class="pagination mt-6 flex justify-center items-center space-x-2"
+                        >
+                            <!-- Previous Button -->
+                            <button
+                                @click="prevPage"
+                                :disabled="currentPage === 1"
+                                class="px-4 py-2 rounded bg-gradient-to-br from-gray-700 to-gray-600 text-white hover:from-gray-500 hover:to-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300"
+                            >
+                                Previous
+                            </button>
+
+                            <!-- Page Numbers -->
+                            <button
+                                v-for="page in totalPages"
+                                :key="page"
+                                @click="goToPage(page)"
+                                :class="[
+                                    'px-4 py-2 rounded transition duration-300',
+                                    currentPage === page
+                                        ? 'bg-gradient-to-br from-green-500 to-green-400 text-white'
+                                        : 'bg-gradient-to-br from-gray-700 to-gray-600 text-white hover:from-gray-500 hover:to-gray-400',
+                                ]"
+                            >
+                                {{ page }}
+                            </button>
+
+                            <!-- Next Button -->
+                            <button
+                                @click="nextPage"
+                                :disabled="currentPage === totalPages"
+                                class="px-4 py-2 rounded bg-gradient-to-br from-gray-700 to-gray-600 text-white hover:from-gray-500 hover:to-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300"
+                            >
+                                Next
+                            </button>
                         </div>
                     </div>
-                </div>
-
-                <!-- Pagination Controls -->
-                <div class="mt-8 flex justify-center space-x-2">
-                    <!-- Previous Button -->
-                    <button
-                        @click="goToPage(cameras.prev_page_url)"
-                        :disabled="!cameras.prev_page_url"
-                        class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        Previous
-                    </button>
-
-                    <!-- Page Numbers -->
-                    <button
-                        v-for="page in totalPages"
-                        :key="page"
-                        @click="goToPage(getPageUrl(page))"
-                        :class="[
-                            'px-4 py-2 rounded',
-                            page === cameras.current_page
-                                ? 'bg-green-500 text-white'
-                                : 'bg-gray-700 text-white hover:bg-gray-600',
-                        ]"
-                    >
-                        {{ page }}
-                    </button>
-
-                    <!-- Next Button -->
-                    <button
-                        @click="goToPage(cameras.next_page_url)"
-                        :disabled="!cameras.next_page_url"
-                        class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        Next
-                    </button>
-                </div>
+                </section>
             </div>
             <!-- Testimonial Section -->
             <section class="mb-16">
@@ -660,36 +680,20 @@
     </div>
 </template>
 <script setup>
-import { computed } from "vue";
-import { defineProps } from "vue";
-import { usePage, router } from "@inertiajs/vue3";
-
 import { ref } from "vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import { Link } from "@inertiajs/vue3";
 
 const showingNavigationDropdown = ref(false);
-
-// Props for cameras
-const { cameras } = usePage().props;
-
-// Compute total pages for pagination
-const totalPages = computed(() => cameras.last_page);
-
-// Navigate to a specific page
-const goToPage = (url) => {
-    if (url) {
-        router.visit(url, { preserveState: true, preserveScroll: true });
-    }
-};
-
-// Generate the page URL for pagination
-const getPageUrl = (page) => {
-    return `${cameras.path}?page=${page}`;
-};
 </script>
 <script>
+import Canon_EOS_R5 from "/public/img/Canon_EOS_R5.png";
+import Sony_A7_III from "/public/img/Sony-A7-III-.png";
+import Nikon_Z6 from "/public/img/Nikon_Z6.png";
+import Fujifilm_X_T4 from "/public/img/Fujifilm_X-T4.png";
+import Panasonic_Lumix_GH5 from "/public/img/Panasonic_Lumix_GH5.png";
+import Blackmagic_Pocket_6K from "/public/img/Blackmagic_Pocket_6K.png";
 import andre from "/public/img/andre.jpg";
 import dave from "/public/img/dave.jpg";
 import jeff from "/public/img/jeff.jpg";
@@ -713,6 +717,52 @@ export default {
 
             currentSlide: 0,
             mobileMenuOpen: false,
+            cameras: [
+                {
+                    id: 1,
+                    name: "Canon EOS R5",
+
+                    image: Canon_EOS_R5,
+                    description: "High-resolution full-frame mirrorless camera",
+                },
+                {
+                    id: 2,
+                    name: "Sony A7 III",
+
+                    image: Sony_A7_III,
+                    description: "Versatile full-frame mirrorless camera",
+                },
+                {
+                    id: 3,
+                    name: "Nikon Z6",
+
+                    image: Nikon_Z6,
+                    description: "All-around performer for stills and video",
+                },
+                {
+                    id: 4,
+                    name: "Fujifilm X-T4",
+
+                    image: Fujifilm_X_T4,
+                    description: "Flagship APS-C mirrorless camera",
+                },
+                {
+                    id: 5,
+                    name: "Panasonic Lumix GH5",
+
+                    image: Panasonic_Lumix_GH5,
+                    description: "Professional-grade video capabilities",
+                },
+                {
+                    id: 6,
+                    name: "Blackmagic Pocket 6K",
+
+                    image: Blackmagic_Pocket_6K,
+                    description: "Cinema-quality 6K video in a compact body",
+                },
+            ],
+            currentPage: 1,
+            itemsPerPage: 3, // Number of items per page
 
             searchTerm: "",
             isPlaying: false,
@@ -745,8 +795,46 @@ export default {
             ],
         };
     },
+    computed: {
+        //paginated the camera list
+        paginatedCameras() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            return this.cameras.slice(start, end);
+        },
+        totalPages() {
+            return Math.ceil(this.cameras.length / this.itemsPerPage);
+        },
 
+        filteredCameras() {
+            return this.cameras.filter((camera) =>
+                camera.name
+                    .toLowerCase()
+                    .includes(this.searchTerm.toLowerCase())
+            );
+        },
+        carouselStyle() {
+            return {
+                transform: `translateX(-${this.currentSlide * 100}%)`,
+            };
+        },
+    },
     methods: {
+        //for pagination
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+            }
+        },
+        goToPage(page) {
+            this.currentPage = page;
+        },
+
         handleRentClick() {
             this.rentCamera({
                 id: "r6-mark-ii",
@@ -780,6 +868,18 @@ export default {
             const video = this.$refs.videoPlayer;
             video.muted = !video.muted;
             this.isMuted = video.muted;
+        },
+        nextSlide() {
+            if (this.currentSlide < this.filteredCameras.length - 1) {
+                this.currentSlide += 1; // Move to the next slide
+            }
+            // If it's the last image, do nothing
+        },
+        prevSlide() {
+            if (this.currentSlide > 0) {
+                this.currentSlide -= 1; // Move to the previous slide
+            }
+            // If it's the first image, do nothing
         },
     },
 };

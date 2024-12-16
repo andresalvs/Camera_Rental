@@ -19,11 +19,13 @@ class SocialiteController extends Controller
     public function googleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google')->user();
+
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if (!$user) {
                 $user = User::create([
+                    'role_id' => 1,
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),

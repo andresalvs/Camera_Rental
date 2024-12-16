@@ -246,8 +246,8 @@ const filteredCameras = computed(() => {
                                     :href="route('login')"
                                     class="bg-blue-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-full transition duration-300"
                                 >
-                                    Rent Now </Link
-                                >y
+                                    Rent Now
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -49,7 +49,7 @@ Route::middleware(['auth', 'connect'])->group(function () {
     //For Customer
     Route::middleware(['customer'])->group(function () {
 
-        Route::get('/home', [CameraController::class, 'index_pagination'])->name('home');
+        // Route::get('/home', [CameraController::class, 'index_pagination'])->name('home');
 
 
         // // Authenticated Shop
@@ -73,10 +73,10 @@ Route::middleware(['auth', 'connect'])->group(function () {
             return Inertia::render('aboutus');
         })->name('aboutus');
 
-        // Home
-        // Route::get('/home', function () {
-        //     return Inertia::render('home');
-        // })->name('home');
+        //Home
+        Route::get('/home', function () {
+            return Inertia::render('home');
+        })->name('home');
 
         Route::post('/support/send-email', [SupportController::class, 'sendEmail'])->name('support.send-email');
     });

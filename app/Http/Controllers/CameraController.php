@@ -14,16 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CameraController extends Controller
 {
-    public function index_pagination()
-    {
-        // Fetch paginated data (4 items per page)
-        $cameras = Cameras::paginate(4);
 
-        // Pass the paginated data to the 'home' view
-        return Inertia::render('home', [
-            'cameras' => $cameras,
-        ]);
-    }
     //for user to view shop
     public function index()
     {
@@ -31,23 +22,23 @@ class CameraController extends Controller
         return Inertia::render('shop', ['cameras' => $cameras]);
     }
 
-    public function rent(Request $request)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'camera_id' => 'required|exists:cameras,camera_id',
-            'camera_name' => 'required|string',
-            'camera_category' => 'required|string',
-            'camera_price' => 'required|numeric',
-            'total_price' => 'required|numeric',
-            'days_rent' => 'required|integer|min:1',
-            'rent_date' => 'required|date',
-            'return_date' => 'required|date|after:rent_date',
-        ]);
+    // public function rent(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'user_id' => 'required|exists:users,id',
+    //         'camera_id' => 'required|exists:cameras,camera_id',
+    //         'camera_name' => 'required|string',
+    //         'camera_category' => 'required|string',
+    //         'camera_price' => 'required|numeric',
+    //         'total_price' => 'required|numeric',
+    //         'days_rent' => 'required|integer|min:1',
+    //         'rent_date' => 'required|date',
+    //         'return_date' => 'required|date|after:rent_date',
+    //     ]);
 
-        $payment = Payments::create($validated);
-        return response()->json(['message' => 'Payment successfully created!', 'payment' => $payment]);
-    }
+    //     $payment = Payments::create($validated);
+    //     return response()->json(['message' => 'Payment successfully created!', 'payment' => $payment]);
+    // }
 
     public function index_view()
     {
@@ -93,6 +84,7 @@ class CameraController extends Controller
         // Store the validated data in the database
         Payments::create($validated);
 
+
         return back()->with('success', 'Payment stored successfully.');
     }
 
@@ -116,7 +108,7 @@ class CameraController extends Controller
             'camera_name' => 'required|string|max:255',
             'camera_price' => 'required|numeric|min:0',
             'camera_category' => 'required|string|max:255',
-            'camera_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'camera_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:16384',
         ]);
 
         if ($request->hasFile('camera_image')) {

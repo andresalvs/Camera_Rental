@@ -91,8 +91,6 @@
         <main class="container mx-auto mt-16 px-4">
             <h1 class="text-3xl font-bold mb-6">Payments</h1>
 
-           
-
             <h2 class="text-2xl font-bold mb-4">All Payments</h2>
             <div
                 v-if="payments.length"

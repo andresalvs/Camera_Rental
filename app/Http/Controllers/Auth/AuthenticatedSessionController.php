@@ -69,11 +69,6 @@ class AuthenticatedSessionController extends Controller
             // dd(config('database.default'));
 
 
-            // // Redirect based on user's email or other attributes
-            // if ($user->email === 'davejasonbulan2003@gmail.com') {
-            //     return redirect()->route('UserDashboard');
-            // }
-
 
         }
 
