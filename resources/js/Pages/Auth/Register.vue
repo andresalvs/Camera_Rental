@@ -124,6 +124,24 @@ const submit = () => {
                         :message="form.errors.password_confirmation"
                     />
                 </div>
+                <div class="mt-4 flex justify-center">
+                    <a
+                        :href="route('auth.google')"
+                        class="flex items-center justify-center w-full py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-700"
+                    >
+                        <svg
+                            class="w-5 h-5 mr-2"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.707 7.707a1 1 0 0 0-1.414-1.414L12 11.586 8.707 8.293a1 1 0 0 0-1.414 1.414L10.586 13H6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h4v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3h4a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4.586l2.293-2.293z"
+                            />
+                        </svg>
+                        Sign in with Google
+                    </a>
+                </div>
                 <!-- <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center">
                         <input
