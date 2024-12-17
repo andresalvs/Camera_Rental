@@ -10,6 +10,7 @@ use App\Models\ViewAcceptedRent;
 use App\Models\ViewPendingRent;
 use App\Models\ViewRejectedRent;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class CameraController extends Controller
@@ -104,6 +105,10 @@ class CameraController extends Controller
 
     public function update(Request $request, Cameras $camera)
     {
+        $connection = session('connection');
+        // dd($connection);
+        // dd($camera->camera_id);
+
         $validatedData = $request->validate([
             'camera_name' => 'required|string|max:255',
             'camera_price' => 'required|numeric|min:0',
@@ -122,7 +127,22 @@ class CameraController extends Controller
         }
 
         // Update camera attributes
-        $camera->update($validatedData);
+        DB::purge($connection); // Purge the existing connection
+        config(['database.default' => $connection]);
+        DB::reconnect($connection); // Reconnect using the manager configuration
+
+        DB::table('cameras')
+            ->where('camera_id', $camera->camera_id)
+            ->update([
+                'camera_name' => $validatedData['camera_name'],
+                'camera_price' => $validatedData['camera_price'],
+                'camera_category' => $validatedData['camera_category'],
+                'camera_image' => $validatedData['camera_image'] ?? $camera->camera_image, // Keep old image if not updated
+                'updated_at' => now(),
+            ]);
+
+
+        // $camera->update($validatedData);
 
         return redirect()->back()->with('success', 'Camera updated successfully!');
     }

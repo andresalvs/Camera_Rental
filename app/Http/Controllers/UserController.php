@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Cameras;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -25,8 +26,11 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        // dd($user);
         // Delete the user
-        $user->delete();
+
+        $userToDelete = DB::table('users')->where('id', $user->id)
+            ->delete();
 
         // Redirect back with a success message
         return redirect()->route('UserDashboard')->with('success', 'User deleted successfully.');

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -33,42 +34,64 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
+
+        $user = DB::table('users')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])->onlyInput('email');
+        }
+
+        $role_id = $user->role_id; // Retrieve user's role_id
+
+        // dd($user->role_id);
+        // Change database connection based on user's role
+        switch ($role_id) {
+            case 3:
+                DB::purge('manager'); // Disconnect existing connection to avoid caching
+                // Update the default database connection to 'manager'
+                config(['database.default' => 'manager']);
+                break;
+            case 2:
+                DB::purge('employee');
+                // Update the default database connection to 'employee'
+                config(['database.default' => 'employee']);
+
+                break;
+            case 1:
+                DB::purge('customer');
+                // Update the default database connection to 'customer'
+                config(['database.default' => 'customer']);
+                break;
+            default:
+                // Fallback to the default connection defined in .env
+                config(['database.default' => env('DB_CONNECTION', 'pgsql')]);
+                DB::purge(env('DB_CONNECTION', 'pgsql'));
+                break;
+        }
+
         // Attempt login
         if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
 
             // Get authenticated user
             $user = Auth::user();
-            // dd($user->role_id);
-            // Change database connection based on user's role
+
             switch ($user->role_id) {
                 case 3:
-                    // Update the default database connection to 'manager'
-                    config(['database.default' => 'manager']);
-                    DB::purge('manager'); // Disconnect existing connection to avoid caching
-                    return redirect()->route('CameraDashboard');
+                    return redirect()->route('UserDashboard');
                     break;
                 case 2:
-                    // Update the default database connection to 'employee'
-                    config(['database.default' => 'employee']);
-                    DB::purge('employee');
                     return redirect()->route('payments.index');
                     break;
                 case 1:
-                    // Update the default database connection to 'customer'
-                    config(['database.default' => 'customer']);
-                    DB::purge('customer');
                     return redirect()->route('home');
-                    break;
-                default:
-                    // Fallback to the default connection defined in .env
-                    config(['database.default' => env('DB_CONNECTION', 'pgsql')]);
-                    DB::purge(env('DB_CONNECTION', 'pgsql'));
                     break;
             }
             // dd(config('database.default'));
-
-
 
         }
 

@@ -17,33 +17,38 @@ class SetDatabaseConnection
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
-            $user = Auth::user();
 
-            // Determine the database connection based on user's role
-            switch ($user->role_id) {
-                case 3:
-                    config(['database.default' => 'manager']);
-                    DB::purge('manager'); // Purge the existing connection
-                    DB::reconnect('manager'); // Reconnect using the manager configuration
-                    break;
-                case 2:
-                    config(['database.default' => 'employee']);
-                    DB::purge('employee');
-                    DB::reconnect('employee');
-                    break;
-                case 1:
-                    config(['database.default' => 'customer']);
-                    DB::purge('customer');
-                    DB::reconnect('customer');
-                    break;
-                default:
-                    // Fallback to the primary connection
-                    config(['database.default' => env('DB_CONNECTION', 'pgsql')]);
-                    DB::purge(env('DB_CONNECTION', 'pgsql'));
-                    DB::reconnect(env('DB_CONNECTION', 'pgsql'));
-                    break;
-            }
+
+        $user = Auth::user();
+        // dd($user->role_id);
+        // Determine the database connection based on user's role
+        switch ($user->role_id) {
+            case 3:
+                DB::purge('manager'); // Purge the existing connection
+                config(['database.default' => 'manager']);
+                DB::reconnect('manager'); // Reconnect using the manager configuration
+                // $pdo = DB::connection('manager')->getName();
+                // dd($pdo);
+                session(['connection' => 'manager']);
+                break;
+            case 2:
+                config(['database.default' => 'employee']);
+                DB::purge('employee');
+                DB::reconnect('employee');
+                session(['connection' => 'employee']);
+                break;
+            case 1:
+                config(['database.default' => 'customer']);
+                DB::purge('customer');
+                DB::reconnect('customer');
+                session(['connection' => 'customer']);
+                break;
+            default:
+                // Fallback to the primary connection
+                config(['database.default' => env('DB_CONNECTION', 'pgsql')]);
+                DB::purge(env('DB_CONNECTION', 'pgsql'));
+                DB::reconnect(env('DB_CONNECTION', 'pgsql'));
+                break;
         }
         return $next($request);
     }

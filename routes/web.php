@@ -31,7 +31,7 @@ Route::middleware(['auth', 'connect'])->group(function () {
     });
 
     // User Dashboard (Admin Only)
-    Route::middleware(['admin'])->group(function () {
+    Route::middleware('admin')->group(function () {
 
         // Cameras
         Route::post('/cameras', [CameraController::class, 'store_camera'])->name('cameras.store');
@@ -47,7 +47,7 @@ Route::middleware(['auth', 'connect'])->group(function () {
     });
 
     //For Customer
-    Route::middleware(['customer'])->group(function () {
+    Route::middleware('customer')->group(function () {
 
         // Route::get('/home', [CameraController::class, 'index_pagination'])->name('home');
 
