@@ -7,7 +7,7 @@ $ chmod -R 775 public/storage
 chmod: cannot access 'public/storage': No such file or directory
 
 Dave Jason B. Salte@LAPTOP-9QNJGL3C MINGW64 /c/3rdYear_1stSem_FinalProject/108Finals/LaravelVueCRUD_inertia (main)
-$ cmod -R 775 storage/app/public/upload
+$ chmod -R 775 storage/app/public/upload
 
 Dave Jason B. Salte@LAPTOP-9QNJGL3C MINGW64 /c/3rdYear_1stSem_FinalProject/108Finals/LaravelVueCRUD_inertia (main)
 $ php artisan storage:link

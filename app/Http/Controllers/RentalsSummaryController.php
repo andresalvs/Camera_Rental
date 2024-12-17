@@ -14,12 +14,18 @@ class RentalsSummaryController extends Controller
         // Refresh the materialized view
         DB::statement('REFRESH MATERIALIZED VIEW rentals_summary');
 
+        $totalRevenue = DB::select('SELECT total_rentals_revenue() AS total_revenue');
+
+        // Access the value from the query result
+        $totalRevenue = $totalRevenue[0]->total_revenue;
+
         // Fetch the updated data
         $rentalsSummary = DB::table('rentals_summary')->get();
 
         // Send the updated data to the Vue component
         return Inertia::render('RentalsSummary/Index', [
             'rentalsSummary' => $rentalsSummary,
+            'totalRevenue' => $totalRevenue,
         ]);
     }
 }
