@@ -11,11 +11,11 @@
                     class="container mx-auto flex justify-between items-center"
                 >
                     <Link
-                        :href="route('home')"
+                        :href="route('landingpage')"
                         class="text-2xl font-bold tracking-tighter group"
                     >
                         <span
-                            class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-blue-500 group-hover:from-blue-500 group-hover:to-purple-400 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                            class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-blue-500 group-hover:from-blue-500 group-hover:to-purple-400 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                         >
                             ZoomPro
                         </span>
@@ -342,12 +342,13 @@
                         in advance to avoid a cancellation fee.
                     </li>
                 </ul>
-                <router-link
-                    to="aboutus"
+                <Link
+                    :href="route('aboutus')"
                     class="text-blue-400 hover:underline mt-4 inline-block"
                 >
                     View Full Terms and Conditions
-                </router-link>
+                </Link>
+               
             </section>
 
             <!-- Privacy Policy Section -->
@@ -360,12 +361,12 @@
                     during the rental process will be handled in accordance with
                     our privacy policy.
                 </p>
-                <router-link
-                    to="aboutus"
+                <Link
+                   :href="route('aboutus')"
                     class="text-blue-400 hover:underline mt-4 inline-block"
                 >
                     View Privacy Policy
-                </router-link>
+                </Link>
             </section>
 
             <!-- Contact Us Section -->

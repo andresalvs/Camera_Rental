@@ -266,7 +266,7 @@
             <h2 class="text-4xl font-bold mb-8 text-center">My Account</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Account Details Section -->
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+                <div class="bg-gray-950 rounded-lg shadow-lg p-6">
                     <h3 class="text-2xl font-semibold mb-4 text-teal-400">
                         Account Details
                     </h3>
@@ -284,7 +284,7 @@
                                 >Membership Status:</span
                             >
                             <span class="text-green-400 font-semibold"
-                                >Active</span
+                                > Active</span
                             >
                         </p>
                     </div>
@@ -293,7 +293,7 @@
                     </h3>
                     <Link
                         :href="route('profile.edit')"
-                        class="inline-flex items-center px-4 py-2 bg-teal-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-teal-500 active:bg-teal-700 focus:outline-none focus:border-teal-700 focus:ring focus:ring-teal-300 disabled:opacity-25 transition ease-in-out duration-150"
+                        class="inline-flex items-center px-4 py-2 bg-teal-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-500 active:bg-teal-700 focus:outline-none focus:border-teal-700 focus:ring focus:ring-teal-300 disabled:opacity-25 transition ease-in-out duration-150"
                     >
                         <UserIcon class="w-4 h-4 mr-2" />
                         Profile Settings
@@ -301,15 +301,15 @@
                 </div>
 
                 <!-- Cameras Rented Section -->
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h3 class="text-2xl font-semibold mb-4 text-blue-400">
+                <div class="bg-gray-950 rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-semibold mb-4 text-center text-teal-400">
                         Cameras Rented
                     </h3>
                     <div
-                        class="overflow-x-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                        class="overflow-x-auto max-h-96 scrollbar-thin scrollbar-thumb-teal-600 scrollbar-track-teal-800"
                     >
-                        <table class="min-w-full divide-y divide-gray-700">
-                            <thead class="bg-gray-700">
+                        <table class="min-w-full divide-y divide-teal-700">
+                            <thead class="bg-teal-700">
                                 <tr>
                                     <th
                                         scope="col"
@@ -355,7 +355,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-gray-800 divide-y divide-gray-700">
+                            <tbody class="bg-teal-900 divide-y divide-gray-700">
                                 <tr
                                     v-for="item in rentedItems"
                                     :key="item.id"
