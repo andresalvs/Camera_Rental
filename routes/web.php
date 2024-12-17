@@ -13,6 +13,9 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\PaymentController;
 use App\Models\Cameras;
 
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\RentalsSummaryController;
+
 // Routes requiring authentication
 Route::middleware(['auth', 'connect'])->group(function () {
 
@@ -23,6 +26,9 @@ Route::middleware(['auth', 'connect'])->group(function () {
 
     // FOR EMPLOYEE
     Route::middleware(['employee'])->group(function () {
+
+
+
         // Payments
         Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
         Route::patch('/payments/{id}/status', [PaymentController::class, 'updateStatus'])->name('payments.updateStatus');
@@ -32,6 +38,13 @@ Route::middleware(['auth', 'connect'])->group(function () {
 
     // User Dashboard (Admin Only)
     Route::middleware('admin')->group(function () {
+
+        Route::get('/rentals-summary', [RentalsSummaryController::class, 'index'])
+            ->name('rentals-summary.index');
+
+        //ACTIVITY LOG
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])
+            ->name('activity-logs.index');
 
         // Cameras
         Route::post('/cameras', [CameraController::class, 'store_camera'])->name('cameras.store');

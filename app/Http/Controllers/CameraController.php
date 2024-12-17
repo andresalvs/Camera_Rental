@@ -23,24 +23,6 @@ class CameraController extends Controller
         return Inertia::render('shop', ['cameras' => $cameras]);
     }
 
-    // public function rent(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'user_id' => 'required|exists:users,id',
-    //         'camera_id' => 'required|exists:cameras,camera_id',
-    //         'camera_name' => 'required|string',
-    //         'camera_category' => 'required|string',
-    //         'camera_price' => 'required|numeric',
-    //         'total_price' => 'required|numeric',
-    //         'days_rent' => 'required|integer|min:1',
-    //         'rent_date' => 'required|date',
-    //         'return_date' => 'required|date|after:rent_date',
-    //     ]);
-
-    //     $payment = Payments::create($validated);
-    //     return response()->json(['message' => 'Payment successfully created!', 'payment' => $payment]);
-    // }
-
     public function index_view()
     {
         // Fetch statistics from views

@@ -31,6 +31,18 @@
                             >
                                 Camera Management
                             </Link>
+                            <Link
+                                :href="route('rentals-summary.index')"
+                                class="text-white hover:text-teal-400 transition-colors duration-200 mr-4"
+                            >
+                                Summary
+                            </Link>
+                            <Link
+                                :href="route('activity-logs.index')"
+                                class="text-white hover:text-teal-400 transition-colors duration-200 mr-4"
+                            >
+                                Activity Logs
+                            </Link>
                         </nav>
                         <!-- Settings Dropdown -->
                         <Dropdown align="right" width="48">

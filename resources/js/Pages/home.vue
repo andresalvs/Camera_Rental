@@ -24,23 +24,6 @@
                     <!-- Desktop Navigation -->
                     <nav class="hidden md:flex space-x-6 items-center">
                         <Link
-                            v-if="
-                                ($page.props.auth?.user?.email ===
-                                    'salte@salte.com',
-                                'andresalvadorgregorio@gmail.com')
-                            "
-                            :href="route('CameraDashboard')"
-                            class="relative overflow-hidden group px-4 py-2 rounded-full transition-all duration-300"
-                        >
-                            <span
-                                class="relative z-10 transition-colors duration-300 group-hover:text-gray-900"
-                                >Dashboard</span
-                            >
-                            <span
-                                class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-green-600 opacity-0 group-hover:opacity-100 transform scale-x-0 group-hover:scale-x-100 transition-all duration-300 rounded-full"
-                            ></span>
-                        </Link>
-                        <Link
                             :href="route('home')"
                             class="relative overflow-hidden group px-4 py-2 rounded-full transition-all duration-300"
                             :class="{

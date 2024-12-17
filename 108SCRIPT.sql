@@ -1,3 +1,5 @@
+
+
 CREATE ROLE customer WITH LOGIN PASSWORD 'customer123';
 GRANT CONNECT ON DATABASE ''TO viewer;
 
@@ -18,6 +20,10 @@ GRANT USAGE, SELECT ON SEQUENCE activity_logs_log_id_seq TO employee;
 
 
 -- MANAGER PERMISSION
+GRANT ALL PRIVILEGES ON rentals_summary TO manager;
+ALTER MATERIALIZED VIEW rentals_summary OWNER TO manager;
+
+grant select on activity_logs to manager
 grant select on users to manager
 grant select on cameras to manager
 grant insert on cameras to manager
@@ -26,6 +32,8 @@ GRANT USAGE, SELECT ON SEQUENCE public.cameras_camera_id_seq TO manager;
 grant select on rejected_rent, pending_rent,accepted_rent to manager
 grant insert on activity_logs to manager
 GRANT USAGE, SELECT ON SEQUENCE activity_logs_log_id_seq TO manager;
+grant select on rentals_summary to manager
+GRANT SELECT ON payments TO manager;
 
 
 -- CUSTOMER PERMISSION
@@ -101,8 +109,11 @@ JOIN cameras c ON p.camera_id = c.camera_id
 WHERE p.status = 'accept'
 GROUP BY c.camera_category;
 
+select * from rentals_summary
 
 select * from activity_logs
+
+delete from activity_logs
 
 
 CREATE OR REPLACE FUNCTION log_activity()
@@ -131,8 +142,32 @@ EXECUTE FUNCTION log_activity();
 
 
 select * from users
+CREATE OR REPLACE FUNCTION filter_activity_logs_by_action(action_filter TEXT)
+RETURNS TABLE(log_id bigint, action TEXT, table_name TEXT, changed_at TIMESTAMP, user_type TEXT) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        activity_logs.log_id, 
+        activity_logs.action::TEXT, -- Cast to TEXT
+        activity_logs.table_name::TEXT, -- Cast to TEXT (if table_name is VARCHAR)
+        activity_logs.changed_at, 
+        activity_logs.user_type::TEXT -- Cast to TEXT (if user_type is VARCHAR)
+    FROM activity_logs
+    WHERE activity_logs.action = action_filter
+    ORDER BY activity_logs.changed_at DESC;
+END;
+$$ LANGUAGE plpgsql;
 
 
+
+-- To filter and get logs with action 'INSERT'
+SELECT * FROM filter_activity_logs_by_action('INSERT');
+
+-- To filter and get logs with action 'UPDATE'
+SELECT * FROM filter_activity_logs_by_action('UPDATE');
+
+-- To filter and get logs with action 'DELETE'
+SELECT * FROM filter_activity_logs_by_action('DELETE');
 
 
 

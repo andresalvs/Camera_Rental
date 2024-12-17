@@ -18,6 +18,30 @@
                     </Link>
 
                     <div class="flex items-center space-x-4">
+                        <nav class="hidden md:block">
+                            <Link
+                                :href="route('UserDashboard')"
+                                class="text-white hover:text-teal-400 transition-colors duration-200 mr-4"
+                            >
+                                User Management
+                            </Link>
+                            <Link
+                                :href="route('CameraDashboard')"
+                                class="text-white hover:text-teal-400 transition-colors duration-200 font-semibold"
+                            >
+                                Camera Management </Link
+                            ><Link
+                                :href="route('rentals-summary.index')"
+                                class="text-white hover:text-teal-400 transition-colors duration-200 mr-4"
+                            >
+                                Summary </Link
+                            ><Link
+                                :href="route('activity-logs.index')"
+                                class="text-white hover:text-teal-400 transition-colors duration-200 mr-4"
+                            >
+                                Activity Logs
+                            </Link>
+                        </nav>
                         <!-- Settings Dropdown -->
                         <Dropdown align="right" width="48">
                             <template #trigger>
@@ -80,29 +104,6 @@
                 </div>
             </div>
         </header>
-
-        <!-- Sub Navigation -->
-        <div class="bg-teal-900 shadow-md">
-            <div class="container mx-auto px-4 py-4">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold">Admin Panel</h1>
-                    <nav class="hidden md:block">
-                        <Link
-                            :href="route('UserDashboard')"
-                            class="text-white hover:text-teal-400 transition-colors duration-200 mr-4 font-semibold underline decoration-teal-500 underline-offset-4"
-                        >
-                            User Management
-                        </Link>
-                        <Link
-                            :href="route('CameraDashboard')"
-                            class="text-white hover:text-teal-400 transition-colors duration-200"
-                        >
-                            Camera Management
-                        </Link>
-                    </nav>
-                </div>
-            </div>
-        </div>
 
         <!-- Content -->
         <main class="container mx-auto py-8 px-4">
