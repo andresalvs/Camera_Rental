@@ -40,11 +40,17 @@ class PaymentController extends Controller
 
     public function getRentedItems(Request $request)
     {
+        $storeLocation = [
+            'latitude' => 8.9413167, // Example: Latitude for Manila
+            'longitude' => 125.5401529, // Example: Longitude for Manila
+        ];
+
         $user = $request->user(); // Gets the currently authenticated user
         $rentedItems = $user->payments()->get();
 
         return Inertia::render('myaccount', [
             'rentedItems' => $rentedItems,
+            'storeLocation' => $storeLocation
         ]);
     }
 }

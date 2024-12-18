@@ -16,7 +16,10 @@ use App\Models\Cameras;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AdminEmployeeController;
 use App\Http\Controllers\RentalsSummaryController;
+use App\Http\Controllers\MapController;
 
+
+Route::get('/store-location', [MapController::class, 'showStoreLocation'])->name('store.location');
 // Routes requiring authentication
 Route::middleware(['auth', 'connect'])->group(function () {
 
@@ -68,8 +71,7 @@ Route::middleware(['auth', 'connect'])->group(function () {
     //For Customer
     Route::middleware('customer', 'verified')->group(function () {
 
-        // Route::get('/home', [CameraController::class, 'index_pagination'])->name('home');
-
+        Route::get('/store-location', [MapController::class, 'showStoreLocation'])->name('store.location');
 
         // // Authenticated Shop
         Route::get('/shop', [CameraController::class, 'index'])->name('shop');

@@ -283,8 +283,8 @@
                             <span class="font-semibold"
                                 >Membership Status:</span
                             >
-                            <span class="text-green-400 font-semibold"
-                                > Active</span
+                            <span class="text-green-400 font-semibold">
+                                Active</span
                             >
                         </p>
                     </div>
@@ -302,7 +302,9 @@
 
                 <!-- Cameras Rented Section -->
                 <div class="bg-gray-950 rounded-lg shadow-lg p-6">
-                    <h3 class="text-2xl font-semibold mb-4 text-center text-teal-400">
+                    <h3
+                        class="text-2xl font-semibold mb-4 text-center text-teal-400"
+                    >
                         Cameras Rented
                     </h3>
                     <div
@@ -414,6 +416,13 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <h1 class="text-lg font-bold my-6">Find Our Store</h1>
+                <StoreMap
+                    :latitude="storeLocation.latitude"
+                    :longitude="storeLocation.longitude"
+                />
+            </div>
         </main>
 
         <!-- Modals -->
@@ -435,10 +444,18 @@ const showingNavigationDropdown = ref(false);
 
 <script>
 import { ref, reactive, onMounted } from "vue";
+import StoreMap from "@/Components/StoreMap.vue";
 
 export default {
     props: {
-        rentedItems: Array, // Passed from the backend
+        rentedItems: Array,
+        storeLocation: {
+            type: Object,
+            required: true,
+        },
+    },
+    components: {
+        StoreMap,
     },
     setup() {
         const mobileMenuOpen = ref(false);
