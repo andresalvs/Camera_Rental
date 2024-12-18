@@ -21,7 +21,7 @@ const role_id = auth.user?.role_id || null;
 const roleBasedRedirect = computed(() => {
     switch (role_id) {
         case 2:
-            return route("home"); // Redirect to admin home
+            return route("payments.index"); // Redirect to admin home
         case 3:
             return route("UserDashboard"); // Redirect to user dashboard
         default:
@@ -37,7 +37,7 @@ const showingNavigationDropdown = ref(false);
         <header
             class="bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg fixed w-full z-10 text-white"
         >
-            <div class="container mx-auto px-4">
+            <div class="container mx-auto px-4 py-5">
                 <div
                     class="container mx-auto flex justify-between items-center"
                 >
@@ -152,6 +152,60 @@ const showingNavigationDropdown = ref(false);
                                     :class="{
                                         'opacity-100 scale-x-100':
                                             route().current('support'),
+                                    }"
+                                ></span>
+                            </Link>
+                        </div>
+                        <div v-if="$page.props.auth.user.role_id == 2">
+                            <Link
+                                :href="route('payments.index')"
+                                class="relative overflow-hidden group px-4 py-2 rounded-full transition-all duration-300"
+                                :class="{
+                                    'bg-gradient-to-r from-blue-500 to-green-600 opacity-100 scale-x-100 text-gray-900':
+                                        route().current('payments.index'),
+                                }"
+                            >
+                                <span
+                                    class="relative z-10 transition-colors duration-300"
+                                    :class="{
+                                        'text-gray-900':
+                                            route().current('payments.index'),
+                                    }"
+                                >
+                                    Home
+                                </span>
+                                <span
+                                    class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-green-600 opacity-0 group-hover:opacity-100 transform scale-x-0 group-hover:scale-x-100 transition-all duration-300 rounded-full"
+                                    :class="{
+                                        'opacity-100 scale-x-100':
+                                            route().current('payments.index'),
+                                    }"
+                                ></span>
+                            </Link>
+                        </div>
+                        <div v-if="$page.props.auth.user.role_id == 3">
+                            <Link
+                                :href="route('UserDashboard')"
+                                class="relative overflow-hidden group px-4 py-2 rounded-full transition-all duration-300"
+                                :class="{
+                                    'bg-gradient-to-r from-blue-500 to-green-600 opacity-100 scale-x-100 text-gray-900':
+                                        route().current('UserDashboard'),
+                                }"
+                            >
+                                <span
+                                    class="relative z-10 transition-colors duration-300"
+                                    :class="{
+                                        'text-gray-900':
+                                            route().current('UserDashboard'),
+                                    }"
+                                >
+                                    Home
+                                </span>
+                                <span
+                                    class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-green-600 opacity-0 group-hover:opacity-100 transform scale-x-0 group-hover:scale-x-100 transition-all duration-300 rounded-full"
+                                    :class="{
+                                        'opacity-100 scale-x-100':
+                                            route().current('UserDashboard'),
                                     }"
                                 ></span>
                             </Link>
@@ -295,63 +349,6 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </div>
         </header>
-
-        <!-- Responsive Navigation Menu -->
-        <!-- <div
-            :class="{
-                block: showingNavigationDropdown,
-                hidden: !showingNavigationDropdown,
-            }"
-            class="md:hidden bg-black bg-opacity-50"
-        >
-            <div class="space-y-1 pb-3 pt-2 px-4">
-                <ResponsiveNavLink
-                    :href="route('home')"
-                    :active="route().current('home')"
-                >
-                    Home
-                </ResponsiveNavLink>
-                <ResponsiveNavLink
-                    :href="route('shop')"
-                    :active="route().current('shop')"
-                >
-                    Shop
-                </ResponsiveNavLink>
-                <ResponsiveNavLink
-                    :href="route('myaccount')"
-                    :active="route().current('myaccount')"
-                >
-                    My Account
-                </ResponsiveNavLink>
-                <ResponsiveNavLink
-                    :href="route('support')"
-                    :active="route().current('support')"
-                >
-                    Support
-                </ResponsiveNavLink>
-            </div>
-
-            <div class="border-t border-gray-700 pb-4 pt-4 px-4">
-                <div class="text-base font-medium text-white">
-                    {{ $page.props.auth.user.name }}
-                </div>
-                <div class="text-sm font-medium text-gray-400">
-                    {{ $page.props.auth.user.email }}
-                </div>
-                <div class="mt-3 space-y-1">
-                    <ResponsiveNavLink :href="route('profile.edit')">
-                        Profile
-                    </ResponsiveNavLink>
-                    <ResponsiveNavLink
-                        :href="route('logout')"
-                        method="post"
-                        as="button"
-                    >
-                        Log Out
-                    </ResponsiveNavLink>
-                </div>
-            </div>
-        </div> -->
 
         <!-- Page Heading -->
         <header class="bg-gray-800 shadow-lg" v-if="$slots.header">

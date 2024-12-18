@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentController;
 use App\Models\Cameras;
 
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\AdminEmployeeController;
 use App\Http\Controllers\RentalsSummaryController;
 
 // Routes requiring authentication
@@ -38,7 +39,12 @@ Route::middleware(['auth', 'connect'])->group(function () {
 
     // User Dashboard (Admin Only)
     Route::middleware('admin')->group(function () {
+        // CREATING EMPLOYEE ACCOUNT
+        Route::get('/admin/employees', [AdminEmployeeController::class, 'index'])->name('employees.index');
+        Route::get('/admin/employees/create', [AdminEmployeeController::class, 'create'])->name('employees.create');
+        Route::post('/admin/employees', [AdminEmployeeController::class, 'store'])->name('employees.store');
 
+        // MATERIALIZED VIEW
         Route::get('/rentals-summary', [RentalsSummaryController::class, 'index'])
             ->name('rentals-summary.index');
 
@@ -60,7 +66,7 @@ Route::middleware(['auth', 'connect'])->group(function () {
     });
 
     //For Customer
-    Route::middleware('customer')->group(function () {
+    Route::middleware('customer', 'verified')->group(function () {
 
         // Route::get('/home', [CameraController::class, 'index_pagination'])->name('home');
 

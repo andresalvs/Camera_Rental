@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cameras;
-use App\Models\User;
+use App\Models\Stocks;
 use App\Models\Payments;
 use App\Models\ViewAcceptedRent;
 use App\Models\ViewPendingRent;
@@ -12,17 +12,20 @@ use App\Models\ViewRejectedRent;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class CameraController extends Controller
 {
 
-    //for user to view shop
+    //CUSTOMER --> CAMERALIST
     public function index()
     {
         $cameras = Cameras::all(); // Fetch all cameras
         return Inertia::render('shop', ['cameras' => $cameras]);
     }
 
+    //ADMIN --> REGULAR VIEWS 
     public function index_view()
     {
         // Fetch statistics from views
@@ -42,12 +45,15 @@ class CameraController extends Controller
         ]);
     }
 
-    //users able to rent camera
+    //USER --> RENT CAMERA
     public function store(Request $request)
     {
         if (!auth()->check()) {
             return back()->withErrors(['message' => 'You must be logged in to perform this action.']);
         }
+        // Fetch the camera and its stock
+
+
 
         // Validate the input data
         $validated = $request->validate([
@@ -71,83 +77,90 @@ class CameraController extends Controller
         return back()->with('success', 'Payment stored successfully.');
     }
 
-    //for guest to view shop
+    //NON-LOGIN_USER --> GUEST VIEW SHOP
     public function index_guest()
     {
         $cameras = Cameras::all(); // Fetch all cameras
         return Inertia::render('shop_guest', ['cameras' => $cameras]);
     }
 
-    //dashboard
+    //ADMIN --> SHOWING CAMERA LIST IN CAMERADASHBOARD
     public function dashboard()
     {
         $cameras = Cameras::all(); // Fetch all cameras
         return Inertia::render('CameraDashboard', ['cameras' => $cameras]);
     }
 
+    // ADMIN --> UPDATE CAMERA
     public function update(Request $request, Cameras $camera)
     {
+        // Determine the connection dynamically
         $connection = session('connection');
-        // dd($connection);
-        // dd($camera->camera_id);
 
+        // Input validation with sanitization rules
         $validatedData = $request->validate([
-            'camera_name' => 'required|string|max:255',
+            'camera_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'], // Letters and spaces only
             'camera_price' => 'required|numeric|min:0',
-            'camera_category' => 'required|string|max:255',
-            'camera_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:16384',
+            'camera_category' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'camera_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:16384', // Max 16MB
         ]);
 
-        if ($request->hasFile('camera_image')) {
-            // Delete the old image if it exists
-            if ($camera->camera_image && \Storage::exists("public/{$camera->camera_image}")) {
-                \Storage::delete("public/{$camera->camera_image}");
-            }
+        // Purge and reconnect to dynamic connection
+        DB::purge($connection);
+        config(['database.default' => $connection]);
+        DB::reconnect($connection);
 
-            // Store the new image and update the path
+        // Handle file upload and delete old image
+        if ($request->hasFile('camera_image')) {
+            if ($camera->camera_image && Storage::exists("public/{$camera->camera_image}")) {
+                Storage::delete("public/{$camera->camera_image}");
+            }
             $validatedData['camera_image'] = $request->file('camera_image')->store('upload', 'public');
+        } else {
+            // Preserve the old image if no new image is uploaded
+            $validatedData['camera_image'] = $camera->camera_image;
         }
 
-        // Update camera attributes
-        DB::purge($connection); // Purge the existing connection
-        config(['database.default' => $connection]);
-        DB::reconnect($connection); // Reconnect using the manager configuration
+        // Sanitize input values before saving (strip_tags removes malicious scripts)
+        $validatedData['camera_name'] = strip_tags($validatedData['camera_name']);
+        $validatedData['camera_category'] = strip_tags($validatedData['camera_category']);
 
+        // Update camera record in the database
         DB::table('cameras')
             ->where('camera_id', $camera->camera_id)
             ->update([
                 'camera_name' => $validatedData['camera_name'],
                 'camera_price' => $validatedData['camera_price'],
                 'camera_category' => $validatedData['camera_category'],
-                'camera_image' => $validatedData['camera_image'] ?? $camera->camera_image, // Keep old image if not updated
+                'camera_image' => $validatedData['camera_image'] ?? $camera->camera_image,
                 'updated_at' => now(),
             ]);
-
-
-        // $camera->update($validatedData);
 
         return redirect()->back()->with('success', 'Camera updated successfully!');
     }
 
-
-    //end
-
-    // Insert a new camera
+    // ADMIN --> CREATING CAMERA
     public function store_camera(Request $request)
     {
+        // Input validation with sanitization rules
         $validatedData = $request->validate([
-            'camera_name' => 'required|string|max:255',
+            'camera_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'], // Only letters and spaces
             'camera_price' => 'required|numeric|min:0',
-            'camera_category' => 'required|string|max:255',
-            'camera_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'camera_category' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'camera_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
         ]);
 
+        // Sanitize input fields
+        $validatedData['camera_name'] = strip_tags($validatedData['camera_name']);
+        $validatedData['camera_category'] = strip_tags($validatedData['camera_category']);
+
+        // Handle image upload
         if ($request->hasFile('camera_image')) {
-            // Store the image in 'public/uploads' and save the path
             $path = $request->file('camera_image')->store('upload', 'public');
             $validatedData['camera_image'] = $path;
         }
 
+        // Create new camera record
         Cameras::create($validatedData);
 
         return redirect()->back()->with('success', 'Camera added successfully!');

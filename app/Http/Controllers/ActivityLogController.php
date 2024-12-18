@@ -10,7 +10,10 @@ class ActivityLogController extends Controller
 {
     /**
      * Display the activity logs.
-     */ public function index(Request $request)
+     */
+
+    //  TABLE VALUE FUNCTION and 
+    public function index(Request $request)
     {
         $actionFilter = $request->query('action');
 

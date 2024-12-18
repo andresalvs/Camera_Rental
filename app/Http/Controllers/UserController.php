@@ -15,12 +15,12 @@ class UserController extends Controller
 
     public function index()
     {
-        // Fetch all users
-        $users = User::all();
+        $customers = User::where('role_id', 1)->get();
+        $employees = User::where('role_id', 2)->get();
 
-        // Return the Inertia page with users data
         return inertia('UserDashboard', [
-            'users' => $users,
+            'customers' => $customers,
+            'employees' => $employees,
         ]);
     }
 

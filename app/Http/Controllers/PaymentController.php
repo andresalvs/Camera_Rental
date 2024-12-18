@@ -11,16 +11,6 @@ use Illuminate\Support\Facades\DB; //for DATABASE
 
 class PaymentController extends Controller
 {
-    public function getPendingRent()
-    {
-        // Call the PostgreSQL function using raw SQL
-        $pendingRentals = DB::select('SELECT * FROM get_pending_rent()');
-
-        // Return the data to an Inertia view
-        return inertia('Payments/PendingRent', [
-            'pendingRentals' => $pendingRentals
-        ]);
-    }
 
     // Fetch payments with filtering
     public function index()

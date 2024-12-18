@@ -391,7 +391,7 @@
                 class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg text-white w-full max-w-4xl"
             >
                 <h3 class="text-2xl md:text-3xl font-semibold mb-6 text-center">
-                    Rent {{ selectedCamera.name }}
+                    Rent {{ selectedCamera.camera_name }}
                 </h3>
                 <div class="flex flex-col md:flex-row items-start md:space-x-8">
                     <!-- Camera Image -->
@@ -514,8 +514,12 @@
                     </div>
                     <div class="w-full md:w-1/3">
                         <img
-                            :src="selectedCamera.image"
-                            :alt="selectedCamera.name"
+                            :src="
+                                selectedCamera.camera_image
+                                    ? `/storage/${selectedCamera.camera_image}`
+                                    : '/placeholder.jpg'
+                            "
+                            :alt="selectedCamera.camera_name"
                             class="w-full h-auto rounded-lg shadow-md"
                         />
                     </div>
@@ -534,75 +538,6 @@
                         class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300"
                     >
                         Confirm and Checkout
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Updated Rent Successfully Placed Modal -->
-        <div
-            v-if="showRentSuccessModal"
-            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4"
-        >
-            <div
-                class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg text-white w-full max-w-4xl"
-            >
-                <h3
-                    class="text-3xl md:text-4xl font-semibold mb-8 text-center text-green-400"
-                >
-                    Rent Successfully Placed!
-                </h3>
-                <div class="flex flex-col md:flex-row items-start md:space-x-8">
-                    <div class="w-full md:w-1/2 space-y-4 mb-6 md:mb-0">
-                        <p class="text-lg md:text-xl">
-                            <strong>Camera:</strong> {{ selectedCamera.name }}
-                        </p>
-                        <p class="text-lg md:text-xl">
-                            <strong>Start Date:</strong> {{ rentStartDate }}
-                        </p>
-                        <p class="text-lg md:text-xl">
-                            <strong>End Date:</strong> {{ rentEndDate }}
-                        </p>
-                        <p class="text-lg md:text-xl">
-                            <strong>Payment Method:</strong> {{ paymentMethod }}
-                        </p>
-                        <div class="bg-gray-700 p-4 rounded-lg">
-                            <p
-                                class="text-green-400 font-bold text-xl md:text-2xl mb-2"
-                            >
-                                Total Cost: ${{ calculateTotalCost }}
-                            </p>
-                            <p
-                                class="text-green-400 font-bold text-xl md:text-2xl"
-                            >
-                                Days to Rent: {{ rentalDays }}
-                            </p>
-                        </div>
-                    </div>
-                    <div
-                        class="w-full md:w-1/2 flex items-center justify-center"
-                    >
-                        <img
-                            :src="selectedCamera.image"
-                            :alt="selectedCamera.name"
-                            class="w-full h-auto rounded-lg shadow-md"
-                        />
-                    </div>
-                </div>
-                <div
-                    class="mt-8 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4"
-                >
-                    <button
-                        @click="goBackToHome"
-                        class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-lg md:text-xl"
-                    >
-                        Go Back to Home
-                    </button>
-                    <button
-                        @click="closeRentSuccessModal"
-                        class="w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-lg md:text-xl"
-                    >
-                        Close
                     </button>
                 </div>
             </div>

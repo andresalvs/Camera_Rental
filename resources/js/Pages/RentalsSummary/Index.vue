@@ -26,9 +26,8 @@
                                         : 'hover:bg-gradient-to-r hover:from-green-400 hover:to-blue-500',
                                 ]"
                             >
-                                User Management
-                            </Link>
-                            <Link
+                                User Management </Link
+                            ><Link
                                 :href="route('CameraDashboard')"
                                 :class="[
                                     'text-white transition-colors duration-200 mr-4 px-3 py-2 rounded-full',
@@ -39,6 +38,7 @@
                             >
                                 Camera Management
                             </Link>
+
                             <Link
                                 :href="route('rentals-summary.index')"
                                 :class="[
@@ -159,9 +159,10 @@
 
         <main class="container mx-auto py-8 px-4">
             <h1>Rentals Summary</h1>
+            <!-- Refresh Button -->
             <button
                 @click="refreshData"
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 border border-red-500"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
                 Refresh Data
             </button>
@@ -216,8 +217,16 @@ const props = defineProps({
 
 // Refresh function to fetch updated data
 const refreshData = () => {
-    // Use Inertia to make a "reload" request to the same controller
-    router.reload({ only: ["rentalsSummary"] });
+    router.reload({
+        only: ["rentalsSummary", "totalRevenue"], // Specify the props to reload
+        preserveScroll: true, // Optional: preserve the user's scroll position
+        onSuccess: () => {
+            console.log("Data refreshed successfully");
+        },
+        onError: (errors) => {
+            console.error("Error refreshing data:", errors);
+        },
+    });
 };
 
 // Currency formatting function

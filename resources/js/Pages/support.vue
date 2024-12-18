@@ -11,7 +11,7 @@
                     class="container mx-auto flex justify-between items-center"
                 >
                     <Link
-                        :href="route('landingpage')"
+                        :href="route('landingPage')"
                         class="text-2xl font-bold tracking-tighter group"
                     >
                         <span
@@ -348,7 +348,6 @@
                 >
                     View Full Terms and Conditions
                 </Link>
-               
             </section>
 
             <!-- Privacy Policy Section -->
@@ -362,7 +361,7 @@
                     our privacy policy.
                 </p>
                 <Link
-                   :href="route('aboutus')"
+                    :href="route('aboutus')"
                     class="text-blue-400 hover:underline mt-4 inline-block"
                 >
                     View Privacy Policy
