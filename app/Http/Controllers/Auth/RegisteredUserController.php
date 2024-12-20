@@ -30,25 +30,50 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validate the request data
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z\s]+$/', // Only allows letters and spaces
+            ],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:' . User::class,
+                'regex:/^[^<>]*$/', // Disallow '<' and '>'
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
+    
         $default_role_id = 1;
-
+    
+        // Sanitize inputs
+        $sanitizedName = htmlspecialchars($request->name, ENT_QUOTES, 'UTF-8');
+        $sanitizedEmail = htmlspecialchars($request->email, ENT_QUOTES, 'UTF-8');
+    
+        // Create the user with sanitized data
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => $sanitizedName,
+            'email' => $sanitizedEmail,
             'password' => Hash::make($request->password),
             'role_id' => $default_role_id,
         ]);
-
+    
+        // Fire the Registered event
         event(new Registered($user));
-
+    
+        // Log the user in
         Auth::login($user);
-
+    
+        // Redirect to the home page
         return redirect(route('home', absolute: false));
     }
+    
+    
+    
 }

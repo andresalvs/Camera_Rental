@@ -1,5 +1,3 @@
-
-
 CREATE ROLE customer WITH LOGIN PASSWORD 'customer123';
 GRANT CONNECT ON DATABASE ''TO viewer;
 
@@ -65,6 +63,7 @@ create view accepted_rent as
 select count(*) as total_accepted
 from payments
 where status = 'accept'
+
 
 
 select * from accepted_rent
@@ -169,9 +168,20 @@ SELECT * FROM filter_activity_logs_by_action('UPDATE');
 -- To filter and get logs with action 'DELETE'
 SELECT * FROM filter_activity_logs_by_action('DELETE');
 
+CREATE INDEX index_camera_name
+ON cameras (camera_name);
 
+CREATE INDEX idx_camera_category
+ON cameras (camera_category);
 
+select * from activity_logs
 
+delete from activity_logs
 
+select * from pg_indexes where indexname = 'idx_camera_category'
+
+-- CREATE INDEX idx_action_changed_at ON activity_logs (action, changed_at DESC);
+
+select * from rentals_summary
 
 

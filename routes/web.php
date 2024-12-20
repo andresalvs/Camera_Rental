@@ -19,7 +19,6 @@ use App\Http\Controllers\RentalsSummaryController;
 use App\Http\Controllers\MapController;
 
 
-Route::get('/store-location', [MapController::class, 'showStoreLocation'])->name('store.location');
 // Routes requiring authentication
 Route::middleware(['auth', 'connect'])->group(function () {
 
@@ -69,7 +68,7 @@ Route::middleware(['auth', 'connect'])->group(function () {
     });
 
     //For Customer
-    Route::middleware('customer', 'verified')->group(function () {
+    Route::middleware('customer')->group(function () {
 
         Route::get('/store-location', [MapController::class, 'showStoreLocation'])->name('store.location');
 

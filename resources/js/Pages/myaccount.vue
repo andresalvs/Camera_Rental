@@ -417,7 +417,7 @@
                 </div>
             </div>
             <div>
-                <h1 class="text-lg font-bold my-6">Find Our Store</h1>
+                <h1 class="text-lg font-bold my-6 ml-10">Find Our Store</h1>
                 <StoreMap
                     :latitude="storeLocation.latitude"
                     :longitude="storeLocation.longitude"

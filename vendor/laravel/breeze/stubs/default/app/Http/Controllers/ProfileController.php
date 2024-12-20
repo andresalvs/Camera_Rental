@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
@@ -26,14 +27,23 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        // Get the validated data
+        $validatedData = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Get the authenticated user's ID
+        $userId = Auth::id();
+
+        // Check if the email has been updated
+        if (isset($validatedData['email'])) {
+            $validatedData['email_verified_at'] = null;
         }
 
-        $request->user()->save();
+        // Update the user's profile in the database using Query Builder
+        DB::table('users')
+            ->where('id', $userId)
+            ->update($validatedData);
 
+        // Redirect back with a status message
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 

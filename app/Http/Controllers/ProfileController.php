@@ -29,36 +29,45 @@ class ProfileController extends Controller
      * Update the user's profile information.
      */
 
-    public function update(Request $request): RedirectResponse
-    {
-        // Validate the request data manually
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            // Add other fields here if necessary
-        ]);
-        $id = Auth::user()->id;
-
-        // Update the user's information
-        // $request->user()->fill($validated);
-
-        DB::table('users')
-            ->where('id', $id)
-            ->update([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'email_verified_at' => null
-            ]);
-
-        // if ($request->user()->isDirty('email')) {
-        //     $request->user()->email_verified_at = null;
-        // }
-
-        // $request->user()->save();
-
-        return Redirect::route('profile.edit');
-    }
-
+     public function update(Request $request): RedirectResponse
+     {
+         // Validate the request data
+         $validated = $request->validate([
+             'name' => [
+                 'required',
+                 'string',
+                 'max:255',
+                 'regex:/^[a-zA-Z\s]+$/', // Only allows letters and spaces
+             ],
+             'email' => [
+                 'required',
+                 'string',
+                 'email',
+                 'max:255',
+                 'regex:/^[^<>]*$/', // Disallow '<' and '>'
+             ],
+             // Add other fields here if necessary
+         ]);
+     
+         $id = Auth::user()->id;
+     
+         // Sanitize inputs
+         $sanitizedName = htmlspecialchars($validated['name'], ENT_QUOTES, 'UTF-8');
+         $sanitizedEmail = htmlspecialchars($validated['email'], ENT_QUOTES, 'UTF-8');
+     
+         // Update the user's information in the database
+         DB::table('users')
+             ->where('id', $id)
+             ->update([
+                 'name' => $sanitizedName,
+                 'email' => $sanitizedEmail,
+                 'email_verified_at' => null, // Reset email verification if email is updated
+             ]);
+     
+         return Redirect::route('profile.edit')->with('success', 'Profile updated successfully!');
+     }
+     
+     
     /**
      * Delete the user's account.
      */
